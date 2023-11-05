@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .column {
+            width: 33.3%;
+            padding: 10px;
+        }
+        .card {
+            text-align: center;
+            box-shadow: 10px 10px 2px 1px #0fefef;
+            background-color: #2567fa;
+            padding: 10px;
+
+        }
+        img {
+            width: auto;
+            height: 200px;
+            border-radius: 20% ;
+        }
+        .buttons{
+            margin-top:30px;
+            display:flex;
+            justify-content:center;
+            gap:2rem;
+        }
+        .buttons button{
+            border:none;
+            padding:0.4rem 1.2rem;
+            background-color:purple;
+            color:white;
+            border-radius:5px;
+            cursor:pointer
+        }
+
+        #page-number{
+            border:none;
+            text-align:center;
+            width:3rem;
+            border-radius:5px;
+        }
+    </style>
+    <script src="Student.js"></script>
+</head>
+<body>
+<progress value="0" max="100" id="uploader">0%</progress>
+<input onchange="validate()" type="file" value="upload" accept=".jpg" id="fileButton">
+<p id="validate_avatar" style="color: red"></p>
+<p id="validate" style="color: blue"></p>
+<!--<div id="imgDiv"></div>-->
+<img id="images" src="" alt="">
+<span style="color: red"  id="validate_name"></span>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Name</span>
+
+    </div>
+    <input oninput="validate()" id="name" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+</div>
+<button class="btn btn-primary" id="btn_create" disabled onclick="createStudent()">Create</button>
+<!--MODAL EDIT-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                        <img id=avatar_update src="" alt="">
+                        <progress value="0" max="100" id="uploader_upload">0%</progress>
+                        <input onchange="validate()" type="file" value="upload" accept=".jpg" id="fileButton_update">
+                        <p id="validate_avatar_update" style="color: red"></p>
+                        <p id="validate_update" style="color: blue"></p>
+                        <!--<div id="imgDiv"></div>-->
+                        <img id="images_update" src="" alt="">
+                    </div>
+                    <div class="form-group">
+                        <span style="color: red"  id="validate_name_update"></span>
+                        <input class="form-control" id="name_update">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODAL EDIT-->
+<script src="upload.js"></script>
+<div class="container" style="background-color: beige">
+    <div class="col-12" style="margin-top: 50px">
+        <div class="row" id="data-list" >
+<!--            <div class="column">-->
+<!--                <div class="card">-->
+<!--                    <p>Chính</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="column">-->
+<!--                <div class="card">-->
+<!--                    <p>Hiếu</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="column">-->
+<!--                <div class="card">-->
+<!--                    <p>Quân</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="column">-->
+<!--                <div class="card">-->
+<!--                    <p>Quân</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="column">-->
+<!--                <div class="card">-->
+<!--                    <p>Quân</p>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+
+        <div class="buttons">
+            <button id="prev" onclick="previousPage()">Prev</button>
+            <input type="text" id="page-number" readonly/>
+            <button id="next" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+</div>
+<script>
+    let id;
+    let avatar;
+    let name;
+    let validate_avatar;
+    let validate_name;
+    let validate_avatar_update;
+    let validate_name_update
+    let dataStudent = localStorage.getItem('listStudent');
+    if(dataStudent==null){
+        dataStudent = [];
+    } else {
+        dataStudent = JSON.parse(localStorage.getItem('listStudent'))
+    }
+    let elementInPage = 3;
+    let startIndex = 0;
+    let endIndex = elementInPage;
+    let pageNumber = 1;
+    function validate() {
+        avatar = document.getElementById('fileButton').value;
+        name = document.getElementById('name').value;
+        validate_avatar = document.getElementById('validate_avatar');
+        validate_name = document.getElementById('validate_name');
+        if(avatar===''){
+            validate_avatar.innerHTML = 'Please upload avatar'
+        } else {
+            validate_avatar.innerHTML = ''
+        }
+        if(name===''){
+            validate_name.innerHTML = 'The name is required'
+        } else {
+            validate_name.innerHTML = ''
+        }
+        if(validate_name.textContent === ''&& validate_avatar.textContent === ''){
+            document.getElementById('btn_create').disabled = false;
+        } else {
+            document.getElementById('btn_create').disabled = true;
+        }
+
+    }
+    function validate_update() {
+        avatar = document.getElementById('fileButton_update').value;
+        name = document.getElementById('name_update').value;
+        validate_avatar_update = document.getElementById('validate_avatar_update');
+        validate_name_update = document.getElementById('validate_name_update');
+        if(avatar===''){
+            validate_avatar_update.innerHTML = 'Please upload avatar'
+        } else {
+            validate_name_update.innerHTML = ''
+        }
+        if(name===''){
+            validate_name_update.innerHTML = 'The name is required'
+        } else {
+            validate_name_update.innerHTML = ''
+        }
+        if(validate_name.textContent === ''&& validate_avatar.textContent === ''){
+            document.getElementById('btn_create').disabled = false;
+        } else {
+            document.getElementById('btn_create').disabled = true;
+        }
+
+    }
+    // let dataStudent = [
+    //                     // {id:1, name: 'Chính'},{id:2, name: 'Hiếu'}, {id:3, name: 'Quân'},
+    //                     // {id:4, name: 'Chính'},{id:5, name: 'Hiếu'}, {id:6, name: 'Quân'},
+    //                     // {id:7, name: 'Chính'},{id:8, name: 'Hiếu'}, {id:9, name: 'Quân'},
+    //                     // {id:10, name: 'Chính'},{id:11, name: 'Hiếu'}, {id:12, name: 'Quân'},
+    //                     // {id:13, name: 'Chính'},{id:14, name: 'Hiếu'}, {id:15, name: 'Quân'},
+    //                     // {id:16, name: 'Chính'},{id:17, name: 'Hiếu'}, {id:18, name: 'Quân'},
+    //                     // {id:19, name: 'Chính'},{id:20, name: 'Hiếu'}, {id:21, name: 'Quân'},
+    //                 ]
+
+    // let pageNumberValue = pageNumber;
+function pageStudents() {
+    console.log('start', startIndex, 'end -->', endIndex)
+    let drawPage = '';
+    // for (let i = 0; i < pageStudent.length; i++) {
+    //     drawPage+= `<div class="column">
+    //                     <div class="card">
+    //                          <p>${pageStudent[i].id}</p>
+    //                          <p>${pageStudent[i].name}</p>
+    //                     </div>
+    //                 </div>`
+    // }
+    // document.getElementById('data-list').innerHTML = drawPage;
+    const pageStudent = dataStudent.slice(startIndex,endIndex)
+        .map((row) =>{
+            return `<div class="column">
+                        <div class="card">
+                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="showUpdateModal(${row.id})" data-whatever="${row.id}">Edit</button>
+                             <p>${row.id}</p>
+                             <img src="${row.avatar}" alt="">
+                             <b style="color: #f802b3">${row.name}</b>
+                        </div>
+                    </div>`
+        }).join('')
+    console.log('pageStudent --->', pageStudent)
+    document.getElementById('data-list').innerHTML = pageStudent;
+    document.getElementById('page-number').value = pageNumber;
+}
+pageStudents();
+    function nextPage() {
+        if (endIndex < dataStudent.length) {
+            startIndex += elementInPage;
+            endIndex += elementInPage;
+            pageNumber += 1;
+        }
+       document.getElementById('page-number').value = pageNumber;
+        pageStudents();
+    }
+    function previousPage() {
+        if (endIndex <= elementInPage) {
+            startIndex = 0;
+            endIndex = elementInPage;
+        } else {
+            startIndex -= elementInPage;
+            endIndex -= elementInPage;
+            pageNumber -= 1;
+        }
+        // pageNumberValue.value = pageNumber;
+        document.getElementById('page-number').value = pageNumber;
+        pageStudents();
+    }
+    function createStudent() {
+        console.log('lengt --->', dataStudent.length)
+        if(dataStudent.length===0){
+            id = 1;
+        } else {
+            id = dataStudent[dataStudent.length-1].id + 1;
+        }
+        avatar = localStorage.getItem('avatar_student');
+        name = document.getElementById('name').value;
+        let newStudent = new Student(id,name,avatar);
+        dataStudent.push(newStudent);
+        localStorage.removeItem('listStudent');
+        localStorage.setItem('listStudent', JSON.stringify(dataStudent));
+        localStorage.removeItem('avatar_student');
+        document.getElementById('validate').innerHTML = 'Create success!'
+        pageStudents();
+    }
+    let idUpdate = 0;
+
+    function showUpdateModal(id) {
+        idUpdate = id;
+        console.log('id ---->', id)
+        let student = findById(id);
+        document.getElementById('name_update').value = student.name;
+        document.getElementById('avatar_update').src = student.avatar;
+    }
+    function findById(id) {
+        for (let i = 0; i < dataStudent.length; i++) {
+            if(dataStudent[i].id===id){
+                return dataStudent[i];
+            }
+        }
+    }
+    // pageNumberValue.addEventListener("change",(e) => {
+    //     let currentPageNumber = Number.parseInt(e.target.value)
+    //     let maxPageNumber = Math.floor(dataStudent.length/3)
+    //     if(currentPageNumber > maxPageNumber){
+    //         currentPageNumber = maxPageNumber;
+    //         e.target.value = value
+    //     }
+    //     else if(currentPageNumber < 0){
+    //         currentPageNumber = 0;
+    //         e.target.value = value
+    //     }
+    //     startIndex = currentPageNumber * 10;
+    //     endIndex = startIndex + 10
+    //     pageNumber = currentPageNumber
+    //     mapData();
+    // })
+
+    //JS MODAL EDIT
+    var exampleModal = document.getElementById('exampleModal')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+        console.log('bat evetn')
+        // Button that triggered the modal
+        var button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        var recipient = button.getAttribute('data-bs-whatever')
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        var modalTitle = exampleModal.querySelector('.modal-title')
+        var modalBodyInput = exampleModal.querySelector('.modal-body input')
+        console.log('check data modal ====> ', recipient.name)
+        modalTitle.textContent = 'Update Student: ' + recipient
+        modalBodyInput.value = recipient
+    })
+</script>
+</body>
+</html>
