@@ -1,21 +1,12 @@
-//BE SURE TO PROTECT EVERYTHING IN THE CONFIG
-//DON'T COMMIT IT!!!
 
-// Initialize Firebase
-
-
-
-// firebase bucket name
-// REPLACE WITH THE ONE YOU CREATE
-// ALSO CHECK STORAGE RULES IN FIREBASE CONSOLE
 var fbBucketName = 'images';
- image = '';
+image = '';
 // get elements
-var uploader = document.getElementById('uploader');
-var fileButton = document.getElementById('fileButton');
+var uploader = document.getElementById('uploader_mp3');
+var fileButton = document.getElementById('fileButton_mp3');
 
 // listen for file selection
-fileButton.addEventListener('change', async function (e) {
+fileButton.addEventListener('change',  function (e) {
 
     // what happened
     console.log('file upload event', e);
@@ -68,15 +59,16 @@ fileButton.addEventListener('change', async function (e) {
             // Upload completed successfully, now we can get the download URL
             // save this link somewhere, e.g. put it in an input field
             var downloadURL = uploadTask.snapshot.downloadURL;
-            localStorage.setItem('avatar_student', downloadURL);
-            let divLocation = document.getElementById("images");
+            localStorage.setItem('mp3', downloadURL);
+            let divLocation = document.getElementById("show_mp3");
             // let imgElement = document.createElement("img");
             // imgElement.src = downloadURL
             // imgElement.width = 200;
             // imgElement.height = 200;
+            divLocation.style.display = 'block';
             divLocation.src = downloadURL;
-            divLocation.width = 200;
-            divLocation.height = 200;
+            // divLocation.width = 200;
+            // divLocation.height = 200;
             // console.log('pic ==', image)
             // divLocation.append(imgElement);
         })
